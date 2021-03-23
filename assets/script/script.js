@@ -1,173 +1,167 @@
-$latRelay = "";
-$lonRelay = "";
-$getCity = "";
+var latRelay = "";
+var lonRelay = "";
+var getCity = "";
 
 // Get API data
-$apiKey = "6d857c70a160a0d7b1f1b5ac6ca1e354";
+var apiKey = "6d857c70a160a0d7b1f1b5ac6ca1e354";
 
-$buttons = $(".cityBtn");
-$paintCity = $("#city");
-$paintTemp = $("#temp");
-$paintHumid = $("#humidity");
-$paintWind = $("#wind");
-$paintUVI = $("#index");
-$5dforcast = $(".5dforcast");
-$searchBtn = $("#searchBtn");
-$searchField = $("#searchField");
-$weatherReport = $("#weatherReport");
 
-$cityArray = JSON.parse(localStorage.getItem("cities"));
-// hide until populated
-$5dforcast.hide();
-$weatherReport.hide();
+//set global variables for classes and id's
+var buttons = $("#cityBtn");
+var searchBtn = $("#searchBtn");
+var searchField = $("#searchField");
+var weatherReport = $("#weatherReport");
+var city = $("#city");
+var setTemp = $("#temp");
+var setHumid = $("#humidity");
+var setWind = $("#wind");
+var setUVI = $("#index");
+var dforcast = $(".5dforcast");
 
-//check if array is empty if not, populate buttons from storage
-if ($cityArray != null) {
-  for (var i = 0; i < $cityArray.length; i++) {
-    $createButton = $("<div>");
-    $createButton.addClass("cityDispBtn");
-    $createButton.attr("data-city", $cityArray[i]);
+var cityArray = JSON.parse(localStorage.getItem("cities"));
+// hide until value
+buttons.hide();
+dforcast.hide();
+weatherReport.hide();
 
-    var p = $("<p>").text($cityArray[i]);
-    $createButton.append(p);
-    console.log($createButton);
-    $("#results").prepend($createButton);
+//check if array is empty. if not populate buttons via local storage.
+if (cityArray != null) {
+  for (var i = 0; i < cityArray.length; i++) {
+    createBtn = $("<div>");
+    createBtn.addClass("cityDispBtn");
+    createBtn.attr("data-city", cityArray[i]);
+
+    var p = $("<p>").text(cityArray[i]);
+    createBtn.append(p);
+    console.log(createBtn);
+    $("#results").prepend(createBtn);
   }
-  weatherDisplay($cityArray[$cityArray.length - 1]);
+  wDisplay(cityArray[cityArray.length - 1]);
 } else {
-  $cityArray = [];
+  cityArray = [];
 }
 
-function weatherDisplay($getCity, addCity = false) {
-  $queryUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + $getCity +"&units=imperial&appid=" + $apiKey;
+function wDisplay(getCity, addCity = false) {
+  var queryUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + getCity +"&units=imperial&appid=" + apiKey;
 
   $.ajax({
-    url: $queryUrl,
+    url: queryUrl,
     method: "GET",
     error: function (xhr, status, error) {
       var errorMessage = xhr.status + ": " + xhr.statusText;
       alert("error, not a city" + errorMessage);
     },
+    
     success: function (response) {
-      $weatherId = response.weather[0].id;
-      console.log($weatherId);
+      weatherId = response.weather[0].id;
+      console.log(weatherId);
       console.log(response);
-      $latRelay = response.coord.lat;
-      $lonRelay = response.coord.lon;
+      latRelay = response.coord.lat;
+      lonRelay = response.coord.lon;
       if (addCity) {
-        $cityArray.push($getCity);
-        // console.log($getCity);
-        $createButton = $("<div>");
-        $createButton.addClass("cityDispBtn");
-        $createButton.attr("data-city", $getCity);
+        cityArray.push(getCity);
+        // console.log(getCity);
+        createBtn = $("<div>");
+        createBtn.addClass("cityDispBtn");
+        createBtn.attr("data-city", getCity);
 
-        var p = $("<p>").text($getCity);
-        $createButton.append(p);
+        var p = $("<p>").text(getCity);
+        createBtn.append(p);
 
-        $("#results").prepend($createButton);
+        $("#results").prepend(createBtn);
       }
-      $oneCallUrl =
-        "https://api.openweathermap.org/data/2.5/onecall?lat=" +
-        $latRelay +
-        "&lon=" +
-        $lonRelay +
-        "&units=imperial" +
-        "&appid=" +
-        $apiKey;
+      oneCallUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=" + latRelay + "&lon=" + lonRelay + "&units=imperial" + "&appid=" + apiKey;
       // console.log(response.name);
-      $paintCity.text(response.name);
-      $paintCity.append(" " + moment(response.dt, "X").format("MM/DD/YY"));
-      $paintCity.append(
-        '<img src="https://openweathermap.org/img/wn/' +
-          response.weather[0].icon +
-          '.png">'
+      city.text(response.name);
+      city.append(" " + moment(response.dt, "X").format("MM/DD/YY"));
+      city.append('<img src="https://openweathermap.org/img/wn/' + response.weather[0].icon + '.png">'
       );
 
       $.ajax({
-        url: $oneCallUrl,
+        url: oneCallUrl,
         method: "GET",
       }).then(function (response) {
         
         var uvi = response.current.uvi;
-        $paintTemp.html("Temperature: " + response.current.temp + "&deg F");
-        $paintHumid.text("Humidity: " + response.current.humidity + " %");
-        $paintWind.text("Wind Speed: " + response.current.wind_speed + " MPH");
-        $paintUVI.text("UV Index: " + response.current.uvi);
+        setTemp.html("Temperature: " + response.current.temp + "&deg F");
+        setHumid.text("Humidity: " + response.current.humidity + "%");
+        setWind.text("Wind Speed: " + response.current.wind_speed + " MPH");
+        setUVI.text("UV Index: " + response.current.uvi);
 
         if (uvi <= 2) {
-          $paintUVI.css("background-color", "green", "padding", "5px");
+          setUVI.css("background-color", "#00e000", "padding", "25px");
         } else if (uvi >= 3 && uvi < 5) {
-          $paintUVI.css("background-color", "yellow");
+          setUVI.css("background-color", "#cffff00");
         } else if (uvi >= 6 && uvi < 8) {
-          $paintUVI.css("background-color", "purple");
+          setUVI.css("background-color", "#ff0a0a");
         }
 
         //set up arrays for all data from the response
-        $dates = [];
-        $dailyIcons = [];
-        $dailyTemp = [];
-        $dailyHumidity = [];
-        $forecastIcons = $(".icons");
-        $forecastTemp = $(".forecastTemp");
-        $forecastHumidty = $(".forecastHumidity");
-        $forecastDate = $(".forecastDate");
+        var dates = [];
+        var dailyIcons = [];
+        var dailyTemp = [];
+        var dailyHumidity = [];
+        var forecastIcons = $(".icons");
+        var forecastTemp = $(".forecastTemp");
+        var forecastHumidty = $(".forecastHumidity");
+        var forecastDate = $(".forecastDate");
         var iconUrl = "https://openweathermap.org/img/wn/";
 
         //for loops to iterate through arrays
         for (var i = 1; i < 6; i++) {
-          $saveTemp = response.daily[i].temp.day;
-          $dailyTemp.push($saveTemp);
+          saveTemp = response.daily[i].temp.day;
+          dailyTemp.push(saveTemp);
         }
 
-        $forecastTemp.each(function (index) {
-          $(this).html("Temp : " + $dailyTemp[index] + "&deg");
+        forecastTemp.each(function (index) {
+          $(this).html("Temp : " + dailyTemp[index] + "&deg");
         });
 
         for (var i = 1; i < 6; i++) {
-          $saveIcons = response.daily[i].weather[0].icon;
-          $dailyIcons.push($saveIcons);
+          saveIcons = response.daily[i].weather[0].icon;
+          dailyIcons.push(saveIcons);
         }
 
-        console.log($dailyIcons);
-        $forecastIcons.each(function (index) {
-          $(this).attr("src", iconUrl + $dailyIcons[index] + ".png");
+        console.log(dailyIcons);
+        forecastIcons.each(function (index) {
+          $(this).attr("src", iconUrl + dailyIcons[index] + ".png");
         });
 
         for (var i = 1; i < 6; i++) {
-          $saveHumidity = response.daily[i].humidity;
-          $dailyHumidity.push($saveHumidity);
+          saveHumidity = response.daily[i].humidity;
+          dailyHumidity.push(saveHumidity);
         }
 
-        $forecastHumidty.each(function (index) {
-          $(this).html("Humidity : " + $dailyHumidity[index] + "&deg");
+        forecastHumidty.each(function (index) {
+          $(this).html("Humidity : " + dailyHumidity[index] + "&deg");
         });
 
         for (var i = 1; i < 6; i++) {
-          $saveDate = response.daily[i].dt;
-          $dateString = moment.unix($saveDate).format("MM/DD/YYYY");
-          $dates.push($dateString);
+          saveDate = response.daily[i].dt;
+          dateString = moment.unix(saveDate).format("MM/DD/YYYY");
+          dates.push(dateString);
         }
 
-        $forecastDate.each(function (index) {
-          $(this).text($dates[index]);
+        forecastDate.each(function (index) {
+          $(this).text(dates[index]);
         });
-        localStorage.setItem("cities", JSON.stringify($cityArray));
-        $5dforcast.show();
-        $weatherReport.show();
+        localStorage.setItem("cities", JSON.stringify(cityArray));
+        dforcast.show();
+        weatherReport.show();
       });
     },
   });
 
 };
 
-//click event for search button that triggers the ajax routine
-$searchBtn.on("click", function (e) {
+//click event for search button
+searchBtn.on("click", function (e) {
   e.preventDefault();
-  $getCity = $("#searchField").val().trim();
+  getCity = $("#searchField").val().trim();
 
-  weatherDisplay($getCity, true);
+  wDisplay(getCity, true);
 });
 
 $(document).on("click", ".cityDispBtn", function (e) {
-  weatherDisplay($(this).text());
+  wDisplay($(this).text());
 });
