@@ -133,7 +133,7 @@ function wDisplay(getCity, addCity = false) {
         }
 
         forecastHumidty.each(function (index) {
-          $(this).html("Humidity : " + dailyHumidity[index] + "&deg");
+          $(this).html("Humidity : " + dailyHumidity[index] + "%");
         });
 
         for (var i = 1; i < 6; i++) {
