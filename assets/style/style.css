@@ -20,10 +20,10 @@ h3 {
   font-size: 24px;  
   margin-bottom: 30px;
   margin-top: -50px;
+  margin-left: -62px;
   background: #63ffa4;
   text-align: left;
   width: 100%;
-  margin-left: -60px;
   padding: 20px 5px;
 }
 
@@ -43,7 +43,7 @@ form input {
   width: 85%;
   background: #f1f1f1;
 }
-    
+
 .button-style { 
   padding: 10px;
   background: #2196F3;
@@ -68,12 +68,20 @@ form input {
 }
 
 .main-display {      
-  padding-left: 20px;
-  padding-bottom: 65px;
+  padding: 20px 0px 85px 20px;
   margin-bottom: 20px;
   box-shadow: 0px 0px 2px 2px #63ffa4;
   background-color: #808080;
 }
+
+.main-display p {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2rem;
+  padding-top: 5px;
+  padding-bottom: 5px
+}
+
 
 .input-display {
   border: solid 1px;
@@ -81,11 +89,6 @@ form input {
   background-color: #808080;
   padding: 60px;
   box-shadow: 0px 0px 2px 2px #63ffa4;
-}
-
-#currentDate {
-  text-align: center;
-  color: white;
 }
 
 .jumbotron {
@@ -100,8 +103,7 @@ form input {
   width: 100%;
   box-shadow: 0px 0px 2px 2px #63ffa4;
   background-color: #808080;
-  max-height: 250px;
-  
+  max-height: 250px;  
 }
 
 .card-content {
@@ -120,9 +122,9 @@ form input {
 }
 
 .container, .container-fluid, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
-width: 80%;
+width: 100%;
 padding-right: var(--bs-gutter-x,.75rem);
 padding-left: var(--bs-gutter-x,.75rem);
-margin-right: auto;
-margin-left: auto;
+margin-right: 40px;
+margin-left: 40px;
 }

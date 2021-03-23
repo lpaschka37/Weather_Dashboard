@@ -1,6 +1,6 @@
 $latRelay = "";
 $lonRelay = "";
-$grabCity = "";
+$getCity = "";
 
 // Get API data
 $apiKey = "6d857c70a160a0d7b1f1b5ac6ca1e354";
@@ -38,11 +38,8 @@ if ($cityArray != null) {
   $cityArray = [];
 }
 
-function weatherDisplay($grabCity, addCity = false) {
-  $queryUrl = "https://api.openweathermap.org/data/2.5/weather?q=" +
-    $grabCity +
-    "&units=imperial&appid=" +
-    $apiKey;
+function weatherDisplay($getCity, addCity = false) {
+  $queryUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + $getCity +"&units=imperial&appid=" + $apiKey;
 
   $.ajax({
     url: $queryUrl,
@@ -58,13 +55,13 @@ function weatherDisplay($grabCity, addCity = false) {
       $latRelay = response.coord.lat;
       $lonRelay = response.coord.lon;
       if (addCity) {
-        $cityArray.push($grabCity);
-        // console.log($grabCity);
+        $cityArray.push($getCity);
+        // console.log($getCity);
         $createButton = $("<div>");
         $createButton.addClass("cityDispBtn");
-        $createButton.attr("data-city", $grabCity);
+        $createButton.attr("data-city", $getCity);
 
-        var p = $("<p>").text($grabCity);
+        var p = $("<p>").text($getCity);
         $createButton.append(p);
 
         $("#results").prepend($createButton);
@@ -98,7 +95,7 @@ function weatherDisplay($grabCity, addCity = false) {
         $paintUVI.text("UV Index: " + response.current.uvi);
 
         if (uvi <= 2) {
-          $paintUVI.css("background-color", "green");
+          $paintUVI.css("background-color", "green", "padding", "5px");
         } else if (uvi >= 3 && uvi < 5) {
           $paintUVI.css("background-color", "yellow");
         } else if (uvi >= 6 && uvi < 8) {
@@ -116,7 +113,7 @@ function weatherDisplay($grabCity, addCity = false) {
         $forecastDate = $(".forecastDate");
         var iconUrl = "https://openweathermap.org/img/wn/";
 
-        //for loops to populate arrays
+        //for loops to iterate through arrays
         for (var i = 1; i < 6; i++) {
           $saveTemp = response.daily[i].temp.day;
           $dailyTemp.push($saveTemp);
@@ -166,9 +163,9 @@ function weatherDisplay($grabCity, addCity = false) {
 //click event for search button that triggers the ajax routine
 $searchBtn.on("click", function (e) {
   e.preventDefault();
-  $grabCity = $("#searchField").val().trim();
+  $getCity = $("#searchField").val().trim();
 
-  weatherDisplay($grabCity, true);
+  weatherDisplay($getCity, true);
 });
 
 $(document).on("click", ".cityDispBtn", function (e) {
